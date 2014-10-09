@@ -1,13 +1,18 @@
 package com.example.katecatlin.sunshineapp;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.app.Fragment;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
@@ -23,6 +28,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
 
@@ -53,7 +59,6 @@ public class MainActivity extends Activity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             ForecastArrayList weekForecast = new ForecastArrayList();
             weekForecast.addForecastToList(MainActivity.forecast1);
@@ -63,6 +68,15 @@ public class MainActivity extends Activity {
             weekForecast.addForecastToList(forecast5);
             weekForecast.addForecastToList(forecast6);
             weekForecast.addForecastToList(forecast7);
+
+            ArrayAdapter<Forecast> forecastAdapter =
+                    new ArrayAdapter<Forecast>(
+                            getActivity(), // The current context (this activity)
+                            R.layout.list_item_forecast, // The name of the layout ID.
+                            R.id.list_item_forecast_textview, // The ID of the textview to populate.
+                            (List<Forecast>) weekForecast);
+
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             return rootView;
         }
