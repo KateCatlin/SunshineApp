@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.app.Fragment;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,18 +17,16 @@ import java.util.List;
 
 
 public class MainActivity extends Activity {
-    private static Forecast forecast1 = new Forecast("Today", "Partly Cloudy", 59, 39);
-    private static Forecast forecast2 = new Forecast("Tomorrow", "Partly Cloudy", 57, 37);
-    private static Forecast forecast3 = new Forecast("Sunday", "Cloudy", 57, 52);
-    private static Forecast forecast4 = new Forecast("Monday", "Chance of Storm", 61, 52);
-    private static Forecast forecast5 = new Forecast("Tuesday", "Chance of Rain", 64, 45);
-    private static Forecast forecast6 = new Forecast("Wednesday", "Cloudy", 52, 37);
-    private static Forecast forecast7 = new Forecast("Thursday", "Clear", 59, 45);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new PlaceholderFragment())
+                    .commit();
+        }
 
     }
 
@@ -60,23 +59,27 @@ public class MainActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            ForecastArrayList weekForecast = new ForecastArrayList();
-            weekForecast.addForecastToList(MainActivity.forecast1);
-            weekForecast.addForecastToList(forecast2);
-            weekForecast.addForecastToList(forecast3);
-            weekForecast.addForecastToList(forecast4);
-            weekForecast.addForecastToList(forecast5);
-            weekForecast.addForecastToList(forecast6);
-            weekForecast.addForecastToList(forecast7);
+            ArrayList<Forecast> weekForecast = new ArrayList<Forecast>();
+
+            weekForecast.add(new Forecast("Today", "Partly Cloudy", 59, 39));
+            weekForecast.add(new Forecast("Tomorrow", "Partly Cloudy", 57, 37));
+            weekForecast.add(new Forecast("Sunday", "Cloudy", 57, 52));
+            weekForecast.add(new Forecast("Monday", "Chance of Storm", 61, 52));
+            weekForecast.add(new Forecast("Tuesday", "Chance of Rain", 64, 45));
+            weekForecast.add(new Forecast("Wednesday", "Cloudy", 52, 37));
+            weekForecast.add(new Forecast("Thursday", "Clear", 59, 45));
 
             ArrayAdapter<Forecast> forecastAdapter =
                     new ArrayAdapter<Forecast>(
                             getActivity(), // The current context (this activity)
                             R.layout.list_item_forecast, // The name of the layout ID.
                             R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                            (List<Forecast>) weekForecast);
+                            weekForecast);
+            //Inside ArrayAdapter there's a method called GetView - create a new class and call it ForecastAdapter
 
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+            listView.setAdapter(forecastAdapter);
 
             return rootView;
         }

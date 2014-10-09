@@ -15,4 +15,24 @@ public class Forecast {
         this.highTemp = highTemp;
         this.lowTemp = lowTemp;
     }
+
+    public String getDay() {
+        return day;
+    }
+
+    public String getWeather() {
+        return weather;
+    }
+
+    public int getHighTemp() {
+        return highTemp;
+    }
+
+    public int getLowTemp() {
+        return lowTemp;
+    }
+
+    public String toString() {
+        return getDay()+ ": " + getWeather() + " " + getHighTemp() + "/" + getLowTemp();
+    }
 }
