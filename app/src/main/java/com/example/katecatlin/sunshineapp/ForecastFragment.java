@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +28,29 @@ public class ForecastFragment extends Fragment {
 
     public ForecastFragment() {
     }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.forecastfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh) {
+            FetchWeatherTask weatherTask = new FetchWeatherTask();
+            weatherTask.execute();
+            return true;
+        }
+                return super.onOptionsItemSelected(item);
+
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,19 +88,20 @@ public class ForecastFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
 
-
             try {
                 // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are available at OWM's forecast API page, at
+                // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
                 URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=48226&mode=json&units=metric&cnt=7");
+
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -86,7 +113,7 @@ public class ForecastFragment extends Fragment {
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
                     // Nothing to do.
-                    forecastJsonStr = null;
+                    return null;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -100,14 +127,14 @@ public class ForecastFragment extends Fragment {
 
                 if (buffer.length() == 0) {
                     // Stream was empty.  No point in parsing.
-                    forecastJsonStr = null;
+                    return null;
                 }
                 forecastJsonStr = buffer.toString();
             } catch (IOException e) {
-                Log.e("PlaceholderFragment", "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attempting
+                Log.e(LOG_TAG, "Error ", e);
+                // If the code didn't successfully get the weather data, there's no point in attemping
                 // to parse it.
-                forecastJsonStr = null;
+                return null;
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
@@ -116,13 +143,12 @@ public class ForecastFragment extends Fragment {
                     try {
                         reader.close();
                     } catch (final IOException e) {
-                        Log.e("PlaceholderFragment", "Error closing stream", e);
+                        Log.e(LOG_TAG, "Error closing stream", e);
                     }
                 }
             }
+            return null;
         }
-
-
     }
 }
 
