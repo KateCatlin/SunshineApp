@@ -194,6 +194,16 @@ public class ForecastFragment extends Fragment {
                 double high = temperatureObject.getDouble(OWM_MAX);
                 double low = temperatureObject.getDouble(OWM_MIN);
 
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String units = prefs.getString(getString(R.string.pref_units_key),
+                        getString(R.string.pref_units_default));
+
+                if (units.equals("Imperial")) {
+                    high = ((high*(9/5)) + 32);
+                    low = ((low*(9/5)) + 32);
+                }
+
+
                 highAndLow = formatHighLows(high, low);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
