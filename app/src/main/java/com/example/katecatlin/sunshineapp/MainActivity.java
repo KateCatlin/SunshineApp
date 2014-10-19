@@ -55,7 +55,14 @@ public class MainActivity extends Activity {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
+        if (id == R.id.action_map) {
+            openPreferedLocationInMap ();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openPreferedLocationInMap () {
+
     }
 
 

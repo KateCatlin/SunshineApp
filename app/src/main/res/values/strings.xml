@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="action_map">Map Preferred Location</string>
     <string name="app_name">SunshineApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
